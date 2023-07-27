@@ -7,7 +7,7 @@ on:
 
 env:
   TMP_LOCATION: artifacts
-  OUTPUT: my_artifacts
+  OUTPUT: my_artifact_2
 
 jobs:
 
