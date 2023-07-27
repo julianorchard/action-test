@@ -5,34 +5,28 @@ on:
     branches:
       - main
 
-env:
-  TMP_LOCATION: artifacts
-  OUTPUT: my_artifact_2
-
 jobs:
 
-  create-artifact:
+  test:
 
     runs-on: ubuntu-latest
     steps:
 
-      - name: Create a temporary artifact downloads folder
-        run: mkdir $TMP_LOCATION
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: Add artifacts to publish to the temp folder
+      - name: Check file to return environmental
         run: |
-          cd $TMP_LOCATION
-          mkdir $OUTPUT
-          cd $OUTPUT
-          echo "test" > test1.txt
-          echo "test" > test2.txt
-          echo "test" > test3.txt
-          cd ..
-          # zip $OUTPUT test1.txt test2.txt test3.txt
-          cd ..
+          if grep -q "environment = \"production\"" test.tf ; then
+            echo "IS_PROD='true'" >> "$GITHUB_ENV"
+          else
+            echo "IS_PROD='false'" >> "$GITHUB_ENV"
+          fi
 
-      - name: Use the Upload Artifact GitHub Action
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.OUTPUT }}
-          path: ${{ env.TMP_LOCATION }}
+      - name: Check environment variable
+        if: contains(env.IS_PROD, 'true')
+        run: echo "It's alive."
+
+      - name: Check environmental variable
+        if: contains(env.IS_PROD, 'false')
+        run: echo "It's not alive."
