@@ -21,8 +21,8 @@ pipelines:
           clean_workspace: true
           jobs:
             build:
-              resources:
-               - "*"
+              # resources:
+              #  - "*"
               tasks:
                - exec:
                    command: echo
